@@ -7,5 +7,8 @@ const authenticate = require('../middleware/authenticate');
 
 // Get profile by ID
 router.post('/:id', authenticate, userController.getProfile);
+router.get('/passwords/:id', authenticate, userController.getPasswords);
+
+
 
 module.exports = router;
