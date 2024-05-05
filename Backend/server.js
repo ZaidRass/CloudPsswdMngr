@@ -1,41 +1,33 @@
 const express = require('express');
-const AWS = require('aws-sdk');
-const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
+// const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
-const port = 3000;
 
-// Configure AWS SDK
-AWS.config.update({
-  region: 'your-region',
-  accessKeyId: 'your-access-key-id',
-  secretAccessKey: 'your-secret-access-key'
-});
+const userRouter = require('./routes/userRoutes');
+const authRouter = require('./routes/auth');
+// const authenticationMiddleware = require('./middleware/authenticationMiddleware');
 
-// Create DynamoDB service object
-const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+app.use(express.json());
+// app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
 
-// Parse JSON bodies
-app.use(bodyParser.json());
+app.use(cors({
+  origin: process.env.ORIGIN,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
-// // Routes
-// app.get('/passwords', (req, res) => {
-//   // Implement logic to fetch passwords from DynamoDB
-// });
+app.use("/api/v1", authRouter);
+// app.use(authenticationMiddleware);
+app.use("/api/v1/users", userRouter);
 
-// app.post('/passwords', (req, res) => {
-//   // Implement logic to add a new password to DynamoDB
-// });
+app.use((req, res, next) => 
+  res.status(404).json({ message: 'Resource not found!' })
+);
 
-// app.put('/passwords/:id', (req, res) => {
-//   // Implement logic to update a password in DynamoDB
-// });
-
-// app.delete('/passwords/:id', (req, res) => {
-//   // Implement logic to delete a password from DynamoDB
-// });
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server running at ${process.env.ORIGIN}`);
 });
