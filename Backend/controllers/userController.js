@@ -86,7 +86,16 @@ const userController = {
     }
   },
 
-  
+  removeProfile : async (req, res) => {
+    try {
+      const user = req.rootUser;
+      await User.deleteUser(user.userId);
+      return res.status(200).json({ message: 'User deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
 
 
 };
