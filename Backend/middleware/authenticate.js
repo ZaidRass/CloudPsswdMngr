@@ -8,16 +8,21 @@ const authenticate = async (req, res, next) =>
         const token = req.cookies.jwtoken;
         const verify = jwt.verify(token, process.env.SECRET_KEY);
 
-        var rootUser = await User.getUserById(verify._id);
+        const rootUser = await User.getUserById(verify.userId);
 
-        if (!rootUser || !rootUser.tokens.some(t => t.token === token))
+        if (!rootUser)
         {
-            throw new Error("User not found or token not valid");
+            throw new Error("User not found.");
+        }
+
+        if (!rootUser.tokens.includes(token))
+        {
+            throw new Error("Unauthorized user.");
         }
 
         req.token = token;
         req.rootUser = rootUser;
-        req.userId = rootUser._id;
+        req.userId = rootUser.userId;
 
         next();
     }
