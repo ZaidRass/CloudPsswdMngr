@@ -15,4 +15,9 @@ router.put('/profile/updatePassword', authenticate, userController.updatePasswor
 router.get('/logout', authenticate, userController.logout);
 
 
+
+router.put('/addNewPassword',authenticate, userController.addNewPassword);
+router.put('/decrypt',authenticate, userController.decrypt)
+router.delete('/deletePlatformPassword/:passwordId', authenticate, userController.deletePlatformPassword);
+router.put('/updateCredentials/:passwordId', authenticate, userController.updateCredentials);
 module.exports = router;
