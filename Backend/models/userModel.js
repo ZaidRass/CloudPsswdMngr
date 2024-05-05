@@ -7,6 +7,7 @@ require('dotenv').config();
 
 const TABLE_NAME = 'Users';
 
+
 // Configure AWS SDK
 AWS.config.update({
   region: process.env.AWS_REGION,
@@ -415,9 +416,22 @@ class User {
     }
   }
    
-  
+ 
+  static async deleteProfile(userId) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      }
+    };
 
-    
+    try {
+      await docClient.delete(params).promise();
+    } catch (err) {
+      console.error('Error deleting user from DynamoDB', err);
+      throw err;
+    }
+  }
 }
 
 module.exports = User;

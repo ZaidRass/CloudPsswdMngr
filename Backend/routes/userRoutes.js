@@ -7,6 +7,7 @@ router.get('/authenticate', authenticate, userController.authenticate);
 
 // Get profile by ID
 router.get('/profile', authenticate, userController.getProfile);
+router.get('/passwords/:id', authenticate, userController.getPasswords);
 
 
 router.put('/addNewPassword',authenticate, userController.addNewPassword);
