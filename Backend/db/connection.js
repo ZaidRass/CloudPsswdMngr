@@ -1,12 +1,22 @@
 const AWS = require('aws-sdk');
+const uuid = require('uuid/v4');
+const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
-// Create DynamoDB service object
-const dynamodb = new AWS.DynamoDB({apiVersion: '2012-08-10'});
+
+AWS.config.update({
+    "region": process.env.AWS_REGION,
+    "endpoint": process.env.AWS_ENDPOINT,
+    "accessKeyId": process.env.ACCESS_KEY_ID,
+    "secretAccessKey": process.env.SECRET_ACCESS_KEY
+});
+
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 // Function to get all passwords from DynamoDB
 async function getPasswords() {
   const params = {
-    TableName: 'your-table-name'
+    TableName: 'Passwords'
   };
 
   try {
@@ -21,11 +31,12 @@ async function getPasswords() {
 // Function to add a new password to DynamoDB
 async function addPassword(password) {
   const params = {
-    TableName: 'your-table-name',
+    TableName: 'Passwords',
     Item: {
-      'id': {S: password.id},
+      'passId': {s:uuid()},
       'username': {S: password.username},
-      'password': {S: password.password}
+      'password': {S: password.password},
+      'userId' : {S: password.userId}
     }
   };
 
@@ -40,9 +51,9 @@ async function addPassword(password) {
 // Function to update a password in DynamoDB
 async function updatePassword(id, password) {
   const params = {
-    TableName: 'your-table-name',
+    TableName: 'Passwords',
     Key: {
-      'id': {S: id}
+      'passId': {S: id}
     },
     UpdateExpression: 'SET #p = :password',
     ExpressionAttributeNames: {
@@ -64,9 +75,9 @@ async function updatePassword(id, password) {
 // Function to delete a password from DynamoDB
 async function deletePassword(id) {
   const params = {
-    TableName: 'your-table-name',
+    TableName: 'Passwords',
     Key: {
-      'id': {S: id}
+      'passId': {S: id}
     }
   };
 
@@ -78,9 +89,14 @@ async function deletePassword(id) {
   }
 }
 
+
+
+
 module.exports = {
+  dynamodb,
   getPasswords,
   addPassword,
   updatePassword,
   deletePassword
+  // updateUserProfilePicture
 };

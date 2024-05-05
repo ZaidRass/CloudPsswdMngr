@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { getPasswords, addPassword, updatePassword } = require('../db/connection');
 const userController = require('../controllers/userController');
+const authenticate = require('../middleware/authenticate');
 
-// Get user profile
-router.get('/profile', userController.getProfile);
+// router.get('/authenticate', authenticate, userController.authenticate);
 
+// Get profile by ID
+router.post('/:id', authenticate, userController.getProfile);
+
+module.exports = router;
