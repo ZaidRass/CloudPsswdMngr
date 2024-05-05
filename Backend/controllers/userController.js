@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
-const authenticate = require('../middleware/authenticate');
-const {encrypt,decrypt }= require('../models/encDecModel');
+const { decrypt } = require('../models/encDecModel');
 require('dotenv').config();
 
 const userController = {
@@ -75,68 +74,67 @@ const userController = {
     }
   },
   addNewPassword: async (req, res) => {
-    try{
-    const userId = req.userId;
-    const { platform, platformEmail, password } = req.body;
-    await User.addNewPassword(userId,password,platform,platformEmail);
-    return res.status(200).json({ message: 'Password added successfully.' });
-  }catch(error){
-    console.log(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-  }
-},
+    try {
+      const userId = req.userId;
+      const { platform, platformEmail, password } = req.body;
+      await User.addNewPassword(userId, password, platform, platformEmail);
+      return res.status(200).json({ message: 'Password added successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
   deletePlatformPassword: async (req, res) => {
-    try{
+    try {
       const user = req.rootUser;
       const { passwordId } = req.params;
-     await User.deletePassword(user, passwordId);
+      await User.deletePassword(user, passwordId);
       return res.status(200).json({ message: 'Platform passwords deleted successfully.' });
-    }catch(error){
+    } catch (error) {
       console.log(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
   updateCredentials: async (req, res) => {
-    try{
+    try {
       const user = req.rootUser;
       const { passwordId } = req.params;
-      const {platformEmail, password } = req.body;
-      if( !platformEmail && !password){
+      const { platformEmail, password } = req.body;
+      if (!platformEmail && !password) {
         return res.status(400).json({ error: 'Please fill in a field to update.' });
       }
-      if(platformEmail && !password){
+      if (platformEmail && !password) {
         await User.updatePlatformEmail(user, passwordId, platformEmail);
       }
-      if(password && !platformEmail){
+      if (password && !platformEmail) {
         await User.updatePassword(user, passwordId, password);
       }
-      if(platformEmail && password){
+      if (platformEmail && password) {
         await User.updateCredentials(user, passwordId, platformEmail, password);
       }
-      
+
       return res.status(200).json({ message: 'Password updated successfully.' });
-    } catch(error) {
+    } catch (error) {
       console.log(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
-  
+
   decrypt: async (req, res) => {
     try {
       const { encryptedData } = req.body;
       let dec = await decrypt(encryptedData).toString();
-      
+
       console.log(dec);
       return res.status(200).send(dec);
     } catch (error) {
-        console.log(error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   getPasswords: async (req, res) => {
     try {
-
       const user = req.rootUser;
       return res.status(200).json(user.savedPasswords);
     } catch (error) {
@@ -145,7 +143,7 @@ const userController = {
     }
   },
 
-  removeProfile : async (req, res) => {
+  removeProfile: async (req, res) => {
     try {
       const user = req.rootUser;
       await User.deleteUser(user.userId);
@@ -183,8 +181,7 @@ const userController = {
       const userId = req.userId;
       const { password, confirm_password } = req.body;
       if (password === confirm_password) {
-        console.log("HENAAAA");
-                await User.updatePassword(userId, password);
+        await User.updatePassword(userId, password);
         return res.status(200).json({ message: 'Password updated successfully.' });
       } else {
         return res.status(400).json({ error: 'Passwords do not match.' });
@@ -196,20 +193,15 @@ const userController = {
   },
 
   logout: async (req, res) => {
+    try {
+      res.clearCookie('jwtoken', { path: '/' });
 
-     try {
-
-    res.clearCookie('jwtoken', { path: '/' });
-    
-    return res.status(200).json({ message: 'User logged out successfully.' });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ error: 'Internal Server Error' });
-
-  }
-
+      return res.status(200).json({ message: 'User logged out successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
   }
 };
-
 
 module.exports = userController;
