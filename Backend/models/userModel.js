@@ -432,6 +432,90 @@ class User {
       throw err;
     }
   }
+
+  static async updateUsername(userId, username) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      },
+      UpdateExpression: 'SET #u = :username',
+      ExpressionAttributeNames: {
+        '#u': 'username'
+      },
+      ExpressionAttributeValues: {
+        ':username': username
+      }
+    };
+  
+    try {
+      await docClient.update(params).promise();
+      console.log("Username updated successfully");
+    } catch (error) {
+      console.error("Unable to update username. Error:", error);
+      throw error;
+    }
+  }
+  
+
+  static async updateEmail(userId, email) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      },
+      UpdateExpression: 'SET #e = :email',
+      ExpressionAttributeNames: {
+        '#e': 'email'
+      },
+      ExpressionAttributeValues: {
+        ':email': email
+      }
+    };
+  
+    try {
+      await docClient.update(params).promise();
+      console.log("Email updated successfully");
+    } catch (error) {
+      console.error("Unable to update email. Error:", error);
+      throw error;
+    }
+  }
+  
+
+  static async updatePassword(userId, password) {
+    const salt = await bcrypt.genSalt(10);
+    console.log("Updating password");
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      },
+      UpdateExpression: 'SET #p = :platformPassword, #s = :salt',
+      ExpressionAttributeNames: {
+        '#p': 'platformPassword',
+        '#s': 'salt'
+      },
+      ExpressionAttributeValues: {
+        ':platformPassword': hashedPassword,
+        ':salt': salt
+      }
+    };
+  
+    try {
+      await docClient.update(params).promise();
+      console.log("Password updated successfully");
+    } catch (error) {
+      console.error("Unable to update password. Error:", error);
+      throw error;
+    }
+  }
+  
+
+
 }
+
 
 module.exports = User;

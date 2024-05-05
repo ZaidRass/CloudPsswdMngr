@@ -136,14 +136,79 @@ const userController = {
 
   getPasswords: async (req, res) => {
     try {
-      const userId = req.params.id;
-      const user = await User.getUserById(userId);
+
+      const user = req.rootUser;
       return res.status(200).json(user.savedPasswords);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-   }
+  },
+
+  removeProfile : async (req, res) => {
+    try {
+      const user = req.rootUser;
+      await User.deleteUser(user.userId);
+      return res.status(200).json({ message: 'User deleted successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+  updateUsername: async (req, res) => {
+    try {
+      const user = req.rootUser;
+      const { username } = req.body;
+      await User.updateUsername(user.userId, username);
+      return res.status(200).json({ message: 'Username updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+  updateEmail: async (req, res) => {
+    try {
+      const user = req.rootUser;
+      const { email } = req.body;
+      await User.updateEmail(user.userId, email);
+      return res.status(200).json({ message: 'Email updated successfully.' });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  updatePassword: async (req, res) => {
+    try {
+      const userId = req.userId;
+      const { password, confirm_password } = req.body;
+      if (password === confirm_password) {
+        console.log("HENAAAA");
+                await User.updatePassword(userId, password);
+        return res.status(200).json({ message: 'Password updated successfully.' });
+      } else {
+        return res.status(400).json({ error: 'Passwords do not match.' });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+  logout: async (req, res) => {
+
+     try {
+
+    res.clearCookie('jwtoken', { path: '/' });
+    
+    return res.status(200).json({ message: 'User logged out successfully.' });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: 'Internal Server Error' });
+
+  }
+
+  }
 };
 
 
