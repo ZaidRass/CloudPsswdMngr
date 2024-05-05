@@ -73,6 +73,23 @@ const userController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
+,
+
+  getPasswords: async (req, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await User.getUserById(userId);
+      return res.status(200).json(user.savedPasswords);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  },
+
+
 };
+
+
+
 
 module.exports = userController;
