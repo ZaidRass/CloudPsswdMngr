@@ -46,8 +46,41 @@ class User {
       throw error;
     }
   }
-
-  static async addNewPassword(userId, userPass, iv, platform, platEmail) {
+  static async deletePassword(user, passId) {
+    try {
+      const passwordIndex = user.savedPasswords.findIndex(password => password.passId === passId);
+  
+      if (passwordIndex === -1) {
+        console.log('Password not found');
+        return false;
+      }
+  
+      const params = {
+        TableName: TABLE_NAME,
+        Key: {
+          userId: user.userId
+        },
+        UpdateExpression: 'REMOVE #p[' + passwordIndex + ']',
+        ExpressionAttributeNames: {
+          '#p': 'savedPasswords'
+        },
+        ConditionExpression: 'attribute_exists(userId)',
+      };
+  
+      await docClient.update(params).promise();
+      console.log('Password deleted successfully');
+      return true;
+    } catch (err) {
+      console.error('Error deleting password:', err);
+      return false;
+    }
+  }
+  
+  static async addNewPassword(userId, platformpass, platform, platEmail) {
+    
+    
+    let encryptedPassword = encrypt(platformpass);
+    let passId = uuid();
     const params = {
       TableName: TABLE_NAME,
       Key: {
@@ -55,10 +88,10 @@ class User {
       },
       UpdateExpression: 'SET #p = list_append(if_not_exists(#p, :empty_list), :passwordObj)',
       ExpressionAttributeNames: {
-        '#p': 'passwords'
+        '#p': 'savedPasswords'
       },
       ExpressionAttributeValues: {
-        ':passwordObj': [{ password: userPass, platform: platform, platEmail: platEmail, iv: iv }],
+        ':passwordObj': [{passId:passId, password: encryptedPassword, platform: platform, platEmail: platEmail}],
         ':empty_list': []
       },
       ConditionExpression: 'attribute_exists(userId)'
@@ -231,12 +264,159 @@ class User {
       throw err;
     }
   }
-
-
-
-
-
-
+  static async addPlatformPassword(userId, platform, platformEmail, password) {
+    try {
+      const user = await this.getUserById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
+  
+      let platPassId = uuid();
+      let enc = encrypt(password);
+      let iv = enc.iv;
+      let encryptedPassword = enc.encryptedPassword;
+  
+      // Construct the saved password object
+      let savedPassword = {
+        platPassId,
+        platform,
+        platformEmail,
+        iv,
+        encryptedPassword
+      };
+  
+      // Push the new saved password object to the savedPasswords array
+      user.savedPasswords.push(savedPassword);
+  
+      // Construct an UpdateExpression to update the savedPasswords attribute
+      const params = {
+        TableName: TABLE_NAME,
+        Key: {
+          userId: userId,
+        },
+        UpdateExpression: 'SET #savedPasswords = :savedPasswords',
+        ExpressionAttributeNames: {
+          '#savedPasswords': 'savedPasswords' // Handle reserved keyword in ExpressionAttributeNames
+        },
+        ExpressionAttributeValues: {
+          ':savedPasswords': user.savedPasswords, // Store the updated array directly
+        },
+      };
+  
+      await docClient.update(params).promise();
+      console.log('Saved password added successfully');
+    } catch (err) {
+      console.error('Error adding saved password', err);
+      throw err;
+    }
+  }
+  static async updatePlatformEmail(user, passwordId, platEmail) {
+    try {
+      const passwordIndex = user.savedPasswords.findIndex(password => password.passId === passwordId);
+  
+      if (passwordIndex === -1) {
+        console.log('Password not found');
+        return false;
+      }
+  
+      user.savedPasswords[passwordIndex].platEmail = platEmail;
+  
+      const params = {
+        TableName: TABLE_NAME,
+        Key: {
+          userId: user.userId
+        },
+        UpdateExpression: 'SET #p = :savedPasswords',
+        ExpressionAttributeNames: {
+          '#p': 'savedPasswords'
+        },
+        ExpressionAttributeValues: {
+          ':savedPasswords': user.savedPasswords
+        },
+        ConditionExpression: 'attribute_exists(userId)',
+      };
+  
+      await docClient.update(params).promise();
+      console.log('PlatEmail updated successfully');
+      return true;
+    } catch (err) {
+      console.error('Error updating platEmail:', err);
+      return false;
+    }
+  }
+  
+  static async updatePassword(user, passwordId, newPassword) {
+    try {
+      const passwordIndex = user.savedPasswords.findIndex(password => password.passId === passwordId);
+  
+      if (passwordIndex === -1) {
+        console.log('Password not found');
+        return false;
+      }
+  
+      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
+  
+      const params = {
+        TableName: TABLE_NAME,
+        Key: {
+          userId: user.userId
+        },
+        UpdateExpression: 'SET #p = :savedPasswords',
+        ExpressionAttributeNames: {
+          '#p': 'savedPasswords'
+        },
+        ExpressionAttributeValues: {
+          ':savedPasswords': user.savedPasswords
+        },
+        ConditionExpression: 'attribute_exists(userId)',
+      };
+  
+      await docClient.update(params).promise();
+      console.log('Password updated successfully');
+      return true;
+    } catch (err) {
+      console.error('Error updating password:', err);
+      return false;
+    }
+  }
+  
+  static async updateCredentials(user, passwordId, platEmail, newPassword) {
+    try {
+      const passwordIndex = user.savedPasswords.findIndex(password => password.passId === passwordId);
+  
+      if (passwordIndex === -1) {
+        console.log('Password not found');
+        return false;
+      }
+  
+      user.savedPasswords[passwordIndex].platEmail = platEmail;
+      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
+  
+      const params = {
+        TableName: TABLE_NAME,
+        Key: {
+          userId: user.userId
+        },
+        UpdateExpression: 'SET #p = :savedPasswords',
+        ExpressionAttributeNames: {
+          '#p': 'savedPasswords'
+        },
+        ExpressionAttributeValues: {
+          ':savedPasswords': user.savedPasswords
+        },
+        ConditionExpression: 'attribute_exists(userId)',
+      };
+  
+      await docClient.update(params).promise();
+      console.log('Credentials updated successfully');
+      return true;
+    } catch (err) {
+      console.error('Error updating credentials:', err);
+      return false;
+    }
+  }
+   
+ 
   static async deleteProfile(userId) {
     const params = {
       TableName: TABLE_NAME,
