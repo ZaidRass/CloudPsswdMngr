@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const User = require('../models/userModel');
+const authenticate = require('../middleware/authenticate');
 
 const userController = {
   register: async (req, res) => {
@@ -59,11 +60,13 @@ const userController = {
     }
   },
 
+  authenticate: async (req, res) => {
+    return res.status(200).send(req.rootUser);
+  },
+
   getProfile: async (req, res) => {
     try {
-      // /:id
-      const userId = req.params.id;
-      const user = await User.getUserById(userId);
+      const user = req.rootUser;
       return res.status(200).json(user);
     } catch (error) {
       console.log(error);
