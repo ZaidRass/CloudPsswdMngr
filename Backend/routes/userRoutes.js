@@ -12,5 +12,7 @@ router.delete('/profile', authenticate, userController.removeProfile);
 router.put('/profile/updateUsername', authenticate, userController.updateUsername);
 router.put('/profile/updateEmail', authenticate, userController.updateEmail);
 router.put('/profile/updatePassword', authenticate, userController.updatePassword);
+router.get('/logout', authenticate, userController.logout);
+
 
 module.exports = router;
