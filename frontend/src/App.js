@@ -1,24 +1,30 @@
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import logo from './logo.svg';
+import Login from './components/Login';
+import MainLayout from './MainLayout';
+import Register from './components/Register';
+import HomePage from './components/HomePage';
+import UserLayout from './UserLayout';
+import UserHome from './components/UserHome';
+import Profile from './components/Profile';
+import { AppearanceContextProvider } from './AppearanceContext'; // Updated import
+
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <AppearanceContextProvider>
+      <Router>
+        <Routes>
+            <Route path="/" element={<MainLayout><HomePage /></MainLayout>} />
+            <Route path="/login" element={<MainLayout><Login /></MainLayout>} />
+            <Route path = "/UserHome" element = {<UserLayout><UserHome /></UserLayout>} />
+            <Route path = "/Profile" element = {<UserLayout><Profile /></UserLayout>} />
+
+        </Routes>
+      </Router>
+    </AppearanceContextProvider>
   );
 }
 
