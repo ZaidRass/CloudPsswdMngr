@@ -4,11 +4,14 @@ import React, { useEffect } from 'react';
 import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { MailIcon } from '../components/MailIcon';
+import { useHistory } from 'react-router-dom'; // Import useHistory hook
+
 
 function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const history = useHistory(); // Initialize useHistory hook
 
   const toggleVisibility = () => {
     setIsVisible(!isVisible);
@@ -18,8 +21,12 @@ function Login() {
     try {
       const response = await axios.post('http://localhost:3000/api/v1/login', { email, password }, { withCredentials: true });
       console.log('Login response:', response);
+      history.push('/home');
+
     } catch (error) {
       console.error('Login error:', error);
+
+
       // Handle error, e.g., show an error message
     }
   };
