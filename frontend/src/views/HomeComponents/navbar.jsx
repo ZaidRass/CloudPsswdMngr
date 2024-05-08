@@ -16,8 +16,24 @@ import { SearchIcon } from "./searchicon.jsx";
 
 // Assuming you have a key logo SVG
 import KeyLogo from "../../assets/keyimage.png";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function () {
+
+  const Navigator = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      console.log("logging out")
+      const response = await axios.post('http://localhost:3000/api/v1/Users/logout',{}, { withCredentials: true });
+      console.log('Logout response:', response);
+      Navigator('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  }
+
   return (
     <Navbar isBordered className="fixed top-0 left-0 w-full bg-white z-50">
       <NavbarContent justify="start">
@@ -58,12 +74,12 @@ export default function () {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem key="profile" className="h-14 gap-2" >
+            <DropdownItem key="profile" className="h-14 gap-2" textValue="profile">
               <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold">zoey@example.com</p>
+              <p className="font-semibold"> Ahmed</p>
             </DropdownItem>
-            <DropdownItem key="Edit_Profile">Edit Profile</DropdownItem>
-            <DropdownItem key="logout" color="danger">
+            <DropdownItem key="Edit_Profile" textValue="Edit Profile">Edit Profile</DropdownItem>
+            <DropdownItem key="logout" color="danger"textValue="Log Out" onClick={handleLogout}> 
               Log Out
             </DropdownItem>
           </DropdownMenu>
