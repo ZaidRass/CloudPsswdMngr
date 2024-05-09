@@ -28,7 +28,6 @@ export default function App() {
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/v1/login', { email, password }, { withCredentials: true });
-      navigate('/profile'); // Redirect to dashboard page
       console.log('Login response:', response);
     } catch (error) {
       console.error('Login error:', error);
