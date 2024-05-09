@@ -38,6 +38,7 @@ const toggleAddForm = () => {
   const fetchPasswords = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/v1/Users/passwords", { withCredentials: true });
+      console.log(response.data);
       if (!response) {
         throw new Error("Failed to fetch passwords");
       }
@@ -52,7 +53,7 @@ const toggleAddForm = () => {
     const cellValue = password[columnKey];
 
     switch (columnKey) {
-      case "Platform mail":
+      case "Platform Mail":
         return (
           <div className="flex flex-col">
             <p className="text-bold text-small capitalize">{cellValue}</p>
@@ -63,6 +64,12 @@ const toggleAddForm = () => {
         return (
           <div className="flex flex-col">
             <p className="text-bold text-tiny capitalize text-default-400">{password.password}</p>
+          </div>
+        );
+      case "Platform":
+        return (
+          <div className="flex flex-col">
+            <p className="text-bold text-tiny capitalize text-default-400">{password.platform}</p>
           </div>
         );
       case "actions":
@@ -123,7 +130,8 @@ const toggleAddForm = () => {
       
     >
       <TableHeader columns={[
-        { uid: "Platform mail", name: "Platform mail" },
+        { uid: "Platform Mail", name: "Platform Mail" },
+        { uid: "Platform", name: "Platform" },
         { uid: "Password", name: "Password" },
         { uid: "actions", name: "Actions" },
       ]}>

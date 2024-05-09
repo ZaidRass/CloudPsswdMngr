@@ -7,32 +7,34 @@ import axios from "axios";
 
 
 export default function AddPasswordForm() {
-  const [email, setEmail] = useState("");
-  const [Password, setPassword] = useState("");
-  const [Platform,setPlatform] = useState("");
+  const [password, setPassword] = useState("");
+  const [platform,setPlatform] = useState("");
   const [showForm, setShowForm] = useState(true);
+  const [platformEmail, setPlatformEmail] = useState("");
 
-  // const handleAddPassword = async ()  => {
+  const handleAddPassword = async ()  => {
   
-  //   try {
-  //     console.log("adding password")
-  //     const response = await axios.put('http://localhost:3000/api/v1/Users/addNewPassword', { Platform, email, Password: Platform,email, Password }, { withCredentials: true });
-  //     if (response.status === 200) {
-  //       console.log('Password added successfully');
-  //     }
-
+    try {
+      console.log("adding password")
+      const response = await axios.put('http://localhost:3000/api/v1/Users/addNewPassword', {platform,platformEmail,password }, { withCredentials: true });
+      if (response.status === 200) {
+        console.log('Password added successfully');
+        // Reload the page after successful password addition
+        window.location.reload();
+      }
+      
 
       
-  //   } catch (error) {
-  //     console.error('Add password error:', error);  
+    } catch (error) {
+      console.error('Add password error:', error);  
       
-  //   }
+    }
   
 
 
-  //   // Hide the form
-  //   setShowForm(false);
-  // };
+    // Hide the form
+    setShowForm(false);
+  };
 
   if (!showForm) {
     return null; // Return null to not render anything
@@ -41,11 +43,11 @@ export default function AddPasswordForm() {
   return (
     <div className="flex flex-wrap justify-between items-center">
       <div className="flex gap-4">
-        <PlatformInput value={Platform} onChange={(e) => setPlatform(e.target.value)}/>
-        <MailInput value={email} onChange={(e) => setEmail(e.target.value)} />
-        <PasswordInput value={Password} onChange={(e) => setPassword(e.target.value)} />
+        <PlatformInput value={platform} onChange={(e) => setPlatform(e.target.value)}/>
+        <MailInput value={platformEmail} onChange={(e) => setPlatformEmail(e.target.value)} />
+        <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} />
       </div>
-      <Button color="primary" >Add Password</Button>
+      <Button color="primary" onClick={handleAddPassword} >Add Password</Button>
     </div>
   );
 }
