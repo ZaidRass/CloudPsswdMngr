@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import ChangeUserEmail from './ChangeUserEmail';
 import ChangeUserUsername from './ChangeUserUsername';
 import ChangeUserPassword from './ChangeUserPassword';
+import ProfileNavBar from './HomeComponents/ProfileNavBar.jsx';
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -45,7 +46,9 @@ function Profile() {
   };
 
   return (
+  
     <div className="flex justify-center items-center h-screen">
+      <ProfileNavBar/>
       <Card className="max-w-[400px]">
         <CardHeader className="flex gap-3">
           <Image
