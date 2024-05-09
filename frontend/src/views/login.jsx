@@ -6,7 +6,9 @@ import { MailIcon } from '../components/MailIcon';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import axios from 'axios';
 
-export default function App() {
+console.log('Login component loaded');
+
+export default function Login() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isRegister, setIsRegister] = React.useState(false);
   const [isVisible, setIsVisible] = React.useState(false);
@@ -14,6 +16,7 @@ export default function App() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
+  const Navigator = useNavigate(); // Initialize useHistory hook
 
   const navigate = useNavigate();
 
@@ -29,6 +32,8 @@ export default function App() {
     try {
       const response = await axios.post('http://localhost:3000/api/v1/login', { email, password }, { withCredentials: true });
       console.log('Login response:', response);
+      Navigator('/home');
+
     } catch (error) {
       console.error('Login error:', error);
     }
