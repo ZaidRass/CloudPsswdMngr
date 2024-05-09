@@ -6,10 +6,13 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "crypto-js": "^4.2.0",
+    "cryptr": "^6.3.0",
     "dotenv": "^16.4.5",
+    "encriptorjs": "^1.0.2",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.0"
+    "nodemon": "^3.1.0",
+    "react-router-dom": "^6.23.0"
   },
   "scripts": {
     "start": "nodemon server.js",

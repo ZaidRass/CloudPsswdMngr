@@ -3,10 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { MailIcon } from '../components/MailIcon';
-import { useNavigate } from 'react-router-dom';
- // Import useHistory hook
-
-
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import axios from 'axios';
 
 console.log('Login component loaded');
@@ -20,6 +17,8 @@ export default function Login() {
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
   const Navigator = useNavigate(); // Initialize useHistory hook
+
+  const navigate = useNavigate();
 
   const handleSwitchForm = () => {
     setIsRegister(!isRegister);
@@ -160,3 +159,4 @@ export default function Login() {
     </>
   );
 }
+
