@@ -68,6 +68,7 @@ class User {
   static async addNewPassword(userId, platformpass, platform, platEmail) {
     let encryptedPassword = encrypt(platformpass);
     let passId = uuid();
+    
     const params = {
       TableName: TABLE_NAME,
       Key: {

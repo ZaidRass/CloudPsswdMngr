@@ -136,7 +136,11 @@ const userController = {
   getPasswords: async (req, res) => {
     try {
       const user = req.rootUser;
-      return res.status(200).json(user.savedPasswords);
+      const decryptedPasswords = user.savedPasswords.map(passwordObj => ({
+        ...passwordObj,
+        password: decrypt(passwordObj.password)
+      }));
+      return res.status(200).json(decryptedPasswords);
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: 'Internal Server Error' });
