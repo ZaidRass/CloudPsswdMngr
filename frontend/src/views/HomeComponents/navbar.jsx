@@ -23,6 +23,10 @@ export default function () {
 
   const Navigator = useNavigate();
 
+  const handleProfile = () => {
+    Navigator('/profile');
+  }
+
   const handleLogout = async () => {
     try {
       console.log("logging out")
@@ -78,7 +82,7 @@ export default function () {
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold"> Ahmed</p>
             </DropdownItem>
-            <DropdownItem key="Edit_Profile" textValue="Edit Profile">Edit Profile</DropdownItem>
+            <DropdownItem key="Edit_Profile" textValue="Edit Profile" onClick={handleProfile}>Edit Profile</DropdownItem>
             <DropdownItem key="logout" color="danger"textValue="Log Out" onClick={handleLogout}> 
               Log Out
             </DropdownItem>
