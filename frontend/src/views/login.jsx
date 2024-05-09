@@ -4,8 +4,6 @@ import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { MailIcon } from '../components/MailIcon';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-
-
 import axios from 'axios';
 
 export default function App() {
@@ -16,7 +14,9 @@ export default function App() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
+
   const navigate = useNavigate();
+
   const handleSwitchForm = () => {
     setIsRegister(!isRegister);
   };
@@ -155,3 +155,4 @@ export default function App() {
     </>
   );
 }
+

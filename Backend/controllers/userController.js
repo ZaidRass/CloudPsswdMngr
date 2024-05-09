@@ -5,19 +5,19 @@ require('dotenv').config();
 
 const userController = {
   register: async (req, res) => {
-    const { name, email, password, cpassword } = req.body;
+    const { username, email, password, confirmPassword } = req.body;
 
-    if (!name || !email || !password || !cpassword) {
+    if (!username || !email || !password || !confirmPassword) {
       return res.status(400).json({ error: 'Invalid Credentials' });
     } else {
-      if (password === cpassword) {
+      if (password === confirmPassword) {
         try {
           const existingUser = await User.getUserByEmail(email);
 
           if (existingUser) {
             return res.status(400).json({ error: 'Email already exists.' });
           } else {
-            await User.createUser(name, password, email);
+            await User.createUser(username, password, email);
           }
           return res.status(201).json({ message: 'User created successfully.' });
         } catch (error) {
