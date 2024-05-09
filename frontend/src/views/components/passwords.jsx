@@ -31,10 +31,21 @@ const toggleAddForm = () => {
     fetchPasswords();
   }, []);
 
+  const handleDelete = async (passwordId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3000/api/v1/Users/deletePlatformPassword/${passwordId}`, { withCredentials: true });
+      if (response.status === 200) {
+        console.log("Password deleted successfully");
+        fetchPasswords();
+      }
+    } catch (error) {
+      console.error("Failed to delete password", error);
+    }
+  };
+
   const fetchPasswords = async () => {
     try {
       const response = await axios.get("http://localhost:3000/api/v1/Users/passwords", { withCredentials: true });
-      console.log(response.data);
       if (!response) {
         throw new Error("Failed to fetch passwords");
       }
@@ -78,9 +89,8 @@ const toggleAddForm = () => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem>View</DropdownItem>
                 <DropdownItem>Edit</DropdownItem>
-                <DropdownItem>Delete</DropdownItem>
+                <DropdownItem onClick={() => handleDelete(password.passId)}>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
