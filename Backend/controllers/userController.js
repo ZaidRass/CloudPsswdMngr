@@ -123,8 +123,8 @@ const userController = {
   decrypt: async (req, res) => {
     try {
       const { encryptedData } = req.body;
-      let dec = await decrypt(encryptedData).toString();
-
+      var dec =  decrypt(encryptedData).toString();
+      
       console.log(dec);
       return res.status(200).send(dec);
     } catch (error) {

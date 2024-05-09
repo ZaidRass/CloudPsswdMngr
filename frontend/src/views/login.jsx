@@ -3,7 +3,7 @@ import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDi
 import { EyeFilledIcon } from '../components/EyeFilledIcon';
 import { EyeSlashFilledIcon } from '../components/EyeSlashFilledIcon';
 import { MailIcon } from '../components/MailIcon';
-
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import axios from 'axios';
 
 export default function App() {
@@ -14,6 +14,8 @@ export default function App() {
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
   const [username, setUsername] = React.useState('');
+
+  const navigate = useNavigate();
 
   const handleSwitchForm = () => {
     setIsRegister(!isRegister);
@@ -26,6 +28,7 @@ export default function App() {
   const handleLogin = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/v1/login', { email, password }, { withCredentials: true });
+      navigate('/profile'); // Redirect to dashboard page
       console.log('Login response:', response);
     } catch (error) {
       console.error('Login error:', error);
@@ -152,3 +155,4 @@ export default function App() {
     </>
   );
 }
+
