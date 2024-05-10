@@ -14,6 +14,5 @@ router.post('/logout', authenticate, userController.logout);
 router.put('/addNewPassword', authenticate, userController.addNewPassword);
 router.put('/decrypt', authenticate, userController.decrypt);
 router.delete('/deletePlatformPassword/:passwordId', authenticate, userController.deletePlatformPassword);
-router.put('/updateCredentials/:passwordId', authenticate, userController.updateCredentials);
-
+router.put('/updateCredentials/:passwordId', authenticate, userController.updateCredentials);  // heya deeh 
 module.exports = router;
