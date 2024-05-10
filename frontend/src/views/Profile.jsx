@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { Card, CardHeader, CardBody, Divider, Image, Button } from "@nextui-org/react";
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
-import ChangeUserEmail from './ChangeUserEmail';
-import ChangeUserUsername from './ChangeUserUsername';
-import ChangeUserPassword from './ChangeUserPassword';
-import ProfileNavBar from './HomeComponents/ProfileNavBar.jsx';
+import { useEffect, useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  Divider,
+  Image,
+  Button,
+} from "@nextui-org/react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import ProfileNavBar from "./components/ProfileNavBar.jsx";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -15,11 +19,14 @@ function Profile() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/api/v1/users/profile', { withCredentials: true });
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/users/profile",
+          { withCredentials: true }
+        );
         setUserData(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching profile:', error);
+        console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message
       }
     };
@@ -29,26 +36,22 @@ function Profile() {
 
   const navigateToChangePassword = () => {
     // Redirect to Change Password component
-    navigate('/profile/ChangeUserPassword');
-    // window.location.href = "/profile/ChangeUserPassword"
+    navigate("/profile/ChangeUserPassword");
   };
 
   const navigateToChangeEmail = () => {
     // Redirect to Change Email component
-    navigate('/profile/ChangeUserEmail');
-    // window.location.href = "/profile/ChangeUserEmail"
-
+    navigate("/profile/ChangeUserEmail");
   };
 
   const navigateToChangeUsername = () => {
     // Redirect to Change Username component
-    navigate('/profile/ChangeUserUsername');
+    navigate("/profile/ChangeUserUsername");
   };
 
   return (
-  
     <div className="flex justify-center items-center h-screen">
-      <ProfileNavBar/>
+      <ProfileNavBar />
       <Card className="max-w-[400px]">
         <CardHeader className="flex gap-3">
           <Image
@@ -65,17 +68,23 @@ function Profile() {
         <Divider />
         <CardBody>
           <div>
-            <p><strong>Username:</strong> {userData && userData.username}</p>
+            <p>
+              <strong>Username:</strong> {userData && userData.username}
+            </p>
             <Button onClick={navigateToChangeUsername}>Change Username</Button>
             <Divider />
           </div>
           <div>
-            <p><strong>Email:</strong> {userData && userData.email}</p>
+            <p>
+              <strong>Email:</strong> {userData && userData.email}
+            </p>
             <Button onClick={navigateToChangeEmail}>Change Email</Button>
             <Divider />
           </div>
           <div>
-            <p><strong>Password:</strong> {userData && userData.platformPassword}</p>
+            <p>
+              <strong>Password:</strong> {userData && userData.platformPassword}
+            </p>
             <Button onClick={navigateToChangePassword}>Change Password</Button>
           </div>
         </CardBody>
