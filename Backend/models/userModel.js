@@ -190,7 +190,112 @@ class User {
   //   }
   // }
 
-  static async updatePlatformEmail(user, passwordId, platEmail) {
+  // static async updatePlatformEmail(user, passwordId, platEmail) {
+  //   try {
+  //     const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
+
+  //     if (passwordIndex === -1) {
+  //       console.log('Password not found');
+  //       return false;
+  //     }
+
+  //     user.savedPasswords[passwordIndex].platEmail = platEmail;
+
+  //     const params = {
+  //       TableName: TABLE_NAME,
+  //       Key: {
+  //         userId: user.userId
+  //       },
+  //       UpdateExpression: 'SET #p = :savedPasswords',
+  //       ExpressionAttributeNames: {
+  //         '#p': 'savedPasswords'
+  //       },
+  //       ExpressionAttributeValues: {
+  //         ':savedPasswords': user.savedPasswords
+  //       },
+  //       ConditionExpression: 'attribute_exists(userId)'
+  //     };
+
+  //     await docClient.update(params).promise();
+  //     console.log('PlatEmail updated successfully');
+  //     return true;
+  //   } catch (err) {
+  //     console.error('Error updating platEmail:', err);
+  //     return false;
+  //   }
+  // }
+
+  // static async updatePassword(user, passwordId, newPassword) {
+  //   try {
+  //     const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
+
+  //     if (passwordIndex === -1) {
+  //       console.log('Password not found');
+  //       return false;
+  //     }
+
+  //     user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
+
+  //     const params = {
+  //       TableName: TABLE_NAME,
+  //       Key: {
+  //         userId: user.userId
+  //       },
+  //       UpdateExpression: 'SET #p = :savedPasswords',
+  //       ExpressionAttributeNames: {
+  //         '#p': 'savedPasswords'
+  //       },
+  //       ExpressionAttributeValues: {
+  //         ':savedPasswords': user.savedPasswords
+  //       },
+  //       ConditionExpression: 'attribute_exists(userId)'
+  //     };
+
+  //     await docClient.update(params).promise();
+  //     console.log('Password updated successfully');
+  //     return true;
+  //   } catch (err) {
+  //     console.error('Error updating password:', err);
+  //     return false;
+  //   }
+  // }
+
+  // static async updatePlatform(user, passwordId, platform) {
+    // try {
+    //   const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
+
+    //   if (passwordIndex === -1) {
+    //     console.log('Password not found');
+    //     return false;
+    //   }
+
+    //   user.savedPasswords[passwordIndex].platform = platform;
+
+    //   const params = {
+    //     TableName: TABLE_NAME,
+    //     Key: {
+    //       userId: user.userId
+    //     },
+    //     UpdateExpression: 'SET #p = :savedPasswords',
+    //     ExpressionAttributeNames: {
+    //       '#p': 'savedPasswords'
+    //     },
+    //     ExpressionAttributeValues: {
+    //       ':savedPasswords': user.savedPasswords
+    //     },
+    //     ConditionExpression: 'attribute_exists(userId)'
+    //   };
+
+    //   await docClient.update(params).promise();
+    //   console.log('Platform updated successfully');
+    //   return true;
+    // } catch (err) {
+    //   console.error('Error updating platform:', err);
+    //   return false;
+    // }
+  // }
+
+  static async updateCredentials(user, passwordId, platform, platEmail, newPassword) {
     try {
       const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
 
@@ -199,78 +304,9 @@ class User {
         return false;
       }
 
-      user.savedPasswords[passwordIndex].platEmail = platEmail;
-
-      const params = {
-        TableName: TABLE_NAME,
-        Key: {
-          userId: user.userId
-        },
-        UpdateExpression: 'SET #p = :savedPasswords',
-        ExpressionAttributeNames: {
-          '#p': 'savedPasswords'
-        },
-        ExpressionAttributeValues: {
-          ':savedPasswords': user.savedPasswords
-        },
-        ConditionExpression: 'attribute_exists(userId)'
-      };
-
-      await docClient.update(params).promise();
-      console.log('PlatEmail updated successfully');
-      return true;
-    } catch (err) {
-      console.error('Error updating platEmail:', err);
-      return false;
-    }
-  }
-
-  static async updatePassword(user, passwordId, newPassword) {
-    try {
-      const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-      if (passwordIndex === -1) {
-        console.log('Password not found');
-        return false;
-      }
-
-      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
-
-      const params = {
-        TableName: TABLE_NAME,
-        Key: {
-          userId: user.userId
-        },
-        UpdateExpression: 'SET #p = :savedPasswords',
-        ExpressionAttributeNames: {
-          '#p': 'savedPasswords'
-        },
-        ExpressionAttributeValues: {
-          ':savedPasswords': user.savedPasswords
-        },
-        ConditionExpression: 'attribute_exists(userId)'
-      };
-
-      await docClient.update(params).promise();
-      console.log('Password updated successfully');
-      return true;
-    } catch (err) {
-      console.error('Error updating password:', err);
-      return false;
-    }
-  }
-
-  static async updateCredentials(user, passwordId, platEmail, newPassword) {
-    try {
-      const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-      if (passwordIndex === -1) {
-        console.log('Password not found');
-        return false;
-      }
-
-      user.savedPasswords[passwordIndex].platEmail = platEmail;
-      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
+      platform ? user.savedPasswords[passwordIndex].platform = platform : null;
+      platEmail ? user.savedPasswords[passwordIndex].platEmail = platEmail : null;
+      newPassword ? user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString() : null;
 
       const params = {
         TableName: TABLE_NAME,

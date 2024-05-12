@@ -55,7 +55,7 @@ export default function Login() {
         { withCredentials: true }
       );
       console.log("Register response:", response);
-      navigate("/home");
+      navigate("/");
     } catch (error) {
       console.error("Register error:", error);
       console.log("Register error:", error.response.data)
