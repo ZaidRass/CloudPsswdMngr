@@ -1,7 +1,6 @@
-import React from "react";
 import {Input} from "@nextui-org/react";
 
-const MailInput = ({value,onChange})=> {
+const MailInput = ({value, onChange}) => {
   const radius = [
     "lg"
   ];

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Table,
   TableHeader,
@@ -6,17 +6,14 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input,
   Button,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Pagination,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { VerticalDotsIcon } from "./VerticalDotsIcon";
-import { SearchIcon } from "./searchicon";
 import axios from "axios";
 import AddPasswordForm from "./AddPasswordForm";
 
@@ -24,7 +21,6 @@ export default function Passwords() {
   const [passwords, setPasswords] = useState([]);
   const [selectedKeys, setSelectedKeys] = useState(new Set([]));
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [page, setPage] = useState(1);
   const [showAddForm, setShowAddForm] = useState(false);
 
 const toggleAddForm = () => {
@@ -116,7 +112,7 @@ const toggleAddForm = () => {
          
             <div className="flex gap-3">
               <Button color="primary" endContent={<PlusIcon />} onClick={toggleAddForm}>
-                Add New Password!
+                Add New Password
               </Button>
             </div>
           </div>
