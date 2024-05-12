@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -14,6 +14,7 @@ import UploadProfileImage from "./components/UploadImageModal";
 function Profile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(""); // State to store image URL
   const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
@@ -25,6 +26,8 @@ function Profile() {
         );
         setUserData(response.data);
         setLoading(false);
+        // Construct the S3 URL from the object key
+        setImageUrl(`https://ezzat.s3.amazonaws.com/${response.data.profilePicture}`);
       } catch (error) {
         console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message
@@ -89,6 +92,7 @@ function Profile() {
         </CardBody>
         <Divider />
         <CardBody>
+          {imageUrl && <Image src={imageUrl} width={200} height={200} alt="Profile Image" />}
           <UploadProfileImage />
         </CardBody>
       </Card>
