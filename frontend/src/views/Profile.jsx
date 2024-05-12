@@ -9,6 +9,7 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import UploadProfileImage from "./components/UploadImageModal";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -85,6 +86,10 @@ function Profile() {
             </p>
             <Button onClick={navigateToChangePassword}>Change Password</Button>
           </div>
+        </CardBody>
+        <Divider />
+        <CardBody>
+          <UploadProfileImage />
         </CardBody>
       </Card>
     </div>

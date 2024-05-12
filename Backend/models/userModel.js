@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { encrypt } = require('./encDecModel.js');
 const uuid = require('uuid').v4;
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
 const docClient = require('../db/connection.js').dynamodb;
 require('dotenv').config();
 
@@ -167,134 +168,6 @@ class User {
     }
   }
 
-  // static async updateUserProfilePicture(userId, profilePicture) {
-  //   const params = {
-  //     TableName: TABLE_NAME,
-  //     Key: {
-  //       userId: userId
-  //     },
-  //     UpdateExpression: 'SET #p = :profilePicture',
-  //     ExpressionAttributeNames: {
-  //       '#p': 'profilePicture'
-  //     },
-  //     ExpressionAttributeValues: {
-  //       ':profilePicture': profilePicture
-  //     }
-  //   };
-
-  //   try {
-  //     await docClient.update(params).promise();
-  //   } catch (err) {
-  //     console.error('Error updating user in DynamoDB', err);
-  //     throw err;
-  //   }
-  // }
-
-  // static async updatePlatformEmail(user, passwordId, platEmail) {
-  //   try {
-  //     const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-  //     if (passwordIndex === -1) {
-  //       console.log('Password not found');
-  //       return false;
-  //     }
-
-  //     user.savedPasswords[passwordIndex].platEmail = platEmail;
-
-  //     const params = {
-  //       TableName: TABLE_NAME,
-  //       Key: {
-  //         userId: user.userId
-  //       },
-  //       UpdateExpression: 'SET #p = :savedPasswords',
-  //       ExpressionAttributeNames: {
-  //         '#p': 'savedPasswords'
-  //       },
-  //       ExpressionAttributeValues: {
-  //         ':savedPasswords': user.savedPasswords
-  //       },
-  //       ConditionExpression: 'attribute_exists(userId)'
-  //     };
-
-  //     await docClient.update(params).promise();
-  //     console.log('PlatEmail updated successfully');
-  //     return true;
-  //   } catch (err) {
-  //     console.error('Error updating platEmail:', err);
-  //     return false;
-  //   }
-  // }
-
-  // static async updatePassword(user, passwordId, newPassword) {
-  //   try {
-  //     const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-  //     if (passwordIndex === -1) {
-  //       console.log('Password not found');
-  //       return false;
-  //     }
-
-  //     user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
-
-  //     const params = {
-  //       TableName: TABLE_NAME,
-  //       Key: {
-  //         userId: user.userId
-  //       },
-  //       UpdateExpression: 'SET #p = :savedPasswords',
-  //       ExpressionAttributeNames: {
-  //         '#p': 'savedPasswords'
-  //       },
-  //       ExpressionAttributeValues: {
-  //         ':savedPasswords': user.savedPasswords
-  //       },
-  //       ConditionExpression: 'attribute_exists(userId)'
-  //     };
-
-  //     await docClient.update(params).promise();
-  //     console.log('Password updated successfully');
-  //     return true;
-  //   } catch (err) {
-  //     console.error('Error updating password:', err);
-  //     return false;
-  //   }
-  // }
-
-  // static async updatePlatform(user, passwordId, platform) {
-    // try {
-    //   const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-    //   if (passwordIndex === -1) {
-    //     console.log('Password not found');
-    //     return false;
-    //   }
-
-    //   user.savedPasswords[passwordIndex].platform = platform;
-
-    //   const params = {
-    //     TableName: TABLE_NAME,
-    //     Key: {
-    //       userId: user.userId
-    //     },
-    //     UpdateExpression: 'SET #p = :savedPasswords',
-    //     ExpressionAttributeNames: {
-    //       '#p': 'savedPasswords'
-    //     },
-    //     ExpressionAttributeValues: {
-    //       ':savedPasswords': user.savedPasswords
-    //     },
-    //     ConditionExpression: 'attribute_exists(userId)'
-    //   };
-
-    //   await docClient.update(params).promise();
-    //   console.log('Platform updated successfully');
-    //   return true;
-    // } catch (err) {
-    //   console.error('Error updating platform:', err);
-    //   return false;
-    // }
-  // }
-
   static async updateCredentials(user, passwordId, platform, platEmail, newPassword) {
     try {
       const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
@@ -422,6 +295,24 @@ class User {
       console.log('Password updated successfully');
     } catch (error) {
       console.error('Unable to update password. Error:', error);
+      throw error;
+    }
+  }
+
+  static async uploadUserPic(userId, fileStream) {
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: `profile_pictures/${userId}.jpg`,
+      Body: fileStream,
+      ContentType: 'image/jpeg'
+    };
+
+    try {
+      await s3.upload(params).promise();
+      console.log('Profile picture uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
       throw error;
     }
   }

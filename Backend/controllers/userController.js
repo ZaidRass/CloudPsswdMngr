@@ -2,6 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const { decrypt } = require("../models/encDecModel");
 require("dotenv").config();
+const { Readable } = require('stream')
 
 const userController = {
   register: async (req, res) => {
@@ -203,9 +204,24 @@ const userController = {
       return res.status(200).json({ message: "User logged out successfully." });
     } catch (error) {
       console.log(error);
-      return res.status(500).json({ error: "Internal Server Error  zzzzzz" });
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
+  uploadProfilePicture: async (req, res) => {
+    const user = req.rootUser;
+    console.log(req.file);
+    const fileStream = Readable.from(req.file.buffer);
+    
+    try {
+      const imageUrl = await User.uploadUserPic(user.userId, fileStream);
+      return res.status(200).json({ message: "Profile picture uploaded successfully.", imageUrl });
+    } catch(error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+  
 };
 
 module.exports = userController;
