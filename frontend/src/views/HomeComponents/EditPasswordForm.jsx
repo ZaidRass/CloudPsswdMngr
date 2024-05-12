@@ -18,7 +18,7 @@ export default function EditPasswordForm ({ passwordId }) {
     console.log("passwordId", passwordId);
     try {
       console.log("editing password")
-      const response = await axios.put(`http://localhost:3000/api/v1/Users/updateCredentials/${passwordId}`, { platformEmail, password }, { withCredentials: true });
+      const response = await axios.put(`http://localhost:3000/api/v1/Users/updateCredentials/${passwordId}`, { platformEmail,platform, password }, { withCredentials: true });
         if (response.status === 200) {
             console.log('Password edited successfully');
             // Reload the page after successful password addition

@@ -6,17 +6,14 @@ import {
   TableBody,
   TableRow,
   TableCell,
-  Input,
   Button,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
   DropdownItem,
-  Pagination,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
 import { VerticalDotsIcon } from "./VerticalDotsIcon";
-import { SearchIcon } from "./searchicon";
 import axios from "axios";
 import AddPasswordForm from "./AddPasswordForm";
 import EditPasswordForm from "./EditPasswordForm";
@@ -30,16 +27,14 @@ export default function Passwords() {
   const [showEditForm, setShowEditForm] = useState(false);
   const [editPasswordId, setEditPasswordId] = useState(null);
 
+  const toggleAddForm = () => {
+    setShowAddForm(!showAddForm);
+  };
 
-
-const toggleAddForm = () => {
-  setShowAddForm(!showAddForm);
-};
-
-const toggleEditForm = (passwordId) => {
-  setShowEditForm(!showEditForm);
-  setEditPasswordId(passwordId);
-};
+  const toggleEditForm = (passwordId) => {
+    setShowEditForm(!showEditForm);
+    setEditPasswordId(passwordId);
+  };
 
   useEffect(() => {
     fetchPasswords();
@@ -103,7 +98,7 @@ const toggleEditForm = (passwordId) => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu>
-                <DropdownItem onClick={toggleEditForm(password.passId)}>Edit</DropdownItem>
+                <DropdownItem onClick={() => toggleEditForm(password.passId)}>Edit</DropdownItem>
                 <DropdownItem onClick={() => handleDelete(password.passId)}>Delete</DropdownItem>
               </DropdownMenu>
             </Dropdown>
@@ -116,14 +111,13 @@ const toggleEditForm = (passwordId) => {
 
   return (
     <Table
-      aria-label="Example table with custom cells, pagination and sorting"
+      aria-label="Passwords Table"
       isHeaderSticky
       selectedKeys={selectedKeys}
       selectionMode="multiple"
       topContent={(
         <div className="flex flex-col gap-4">
           <div className="flex justify-end gap-3 items-end">
-         
             <div className="flex gap-3">
               <Button color="primary" endContent={<PlusIcon />} onClick={toggleAddForm}>
                 Add New Password!
@@ -132,8 +126,6 @@ const toggleEditForm = (passwordId) => {
           </div>
           {showAddForm && <AddPasswordForm />}
           {showEditForm && <EditPasswordForm passwordId={editPasswordId} />}
-
-
           <div className="flex justify-between items-center">
             <span className="text-default-400 text-small">Total {passwords.length} passwords</span>
             <label className="flex items-center text-default-400 text-small">
@@ -150,7 +142,6 @@ const toggleEditForm = (passwordId) => {
           </div>
         </div>
       )}
-      
     >
       <TableHeader columns={[
         { uid: "Platform Mail", name: "Platform Mail" },

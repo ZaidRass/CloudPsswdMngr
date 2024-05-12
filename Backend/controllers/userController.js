@@ -99,7 +99,7 @@ const userController = {
     try {
       const user = req.rootUser;
       const { passwordId } = req.params;
-      const { platformEmail, password } = req.body;
+      const { platformEmail, platform, password } = req.body;
       if (!platformEmail && !password) {
         return res.status(400).json({ error: 'Please fill in a field to update.' });
       }
@@ -112,6 +112,7 @@ const userController = {
       if (platformEmail && password) {
         await User.updateCredentials(user, passwordId, platformEmail, password);
       }
+      
 
       return res.status(200).json({ message: 'Password updated successfully.' });
     } catch (error) {
