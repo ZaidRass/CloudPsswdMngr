@@ -112,7 +112,7 @@ const toggleAddForm = () => {
          
             <div className="flex gap-3">
               <Button color="primary" endContent={<PlusIcon />} onClick={toggleAddForm}>
-                Add New Password!
+                Add New Password
               </Button>
             </div>
           </div>
