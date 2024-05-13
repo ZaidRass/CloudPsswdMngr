@@ -26,8 +26,14 @@ function Profile() {
         );
         setUserData(response.data);
         setLoading(false);
-        // Construct the S3 URL from the object key
-        setImageUrl(`https://ezzat.s3.amazonaws.com/${response.data.profilePicture}`);
+        // Call API to fetch profile picture
+        //.log(response.)
+        const pictureResponse = await axios.get(
+          `http://localhost:3000/api/v1/users/getProfilePic`,
+          { withCredentials: true }
+        );
+        console.log("here112351",pictureResponse.data.imageUrl)
+        setImageUrl(pictureResponse.data.imageUrl);
       } catch (error) {
         console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message

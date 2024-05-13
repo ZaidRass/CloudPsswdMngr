@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { encrypt } = require('./encDecModel.js');
 const uuid = require('uuid').v4;
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { Readable } = require('stream');
 const docClient = require('../db/connection.js').dynamodb;
 require('dotenv').config();
 
@@ -316,6 +317,28 @@ class User {
       throw error;
     }
   }
+  // Add a method in the User class to retrieve the user's profile picture
+
+  static async getUserPic(userId) {
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: `profile_pictures/${userId}.jpg`,
+    };
+  
+    try {
+      const { Body } = await s3.getObject(params).promise();
+  
+      // Convert the array to a buffer
+      const buffer = Buffer.from(Body);
+  
+      return buffer;
+    } catch (error) {
+      console.error('Error retrieving profile picture:', error);
+      throw error;
+    }
+  }
+  
 }
 
 module.exports = User;
