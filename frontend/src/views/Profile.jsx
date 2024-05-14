@@ -10,6 +10,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import UploadProfileImage from "./components/UploadImageModal";
+import ProfileNavBar from "./components/ProfileNavBar"
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -32,8 +33,10 @@ function Profile() {
           `http://localhost:3000/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
+        
         console.log("here112351",pictureResponse.data.imageUrl)
         setImageUrl(pictureResponse.data.imageUrl);
+        // refresh window
       } catch (error) {
         console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message
@@ -60,20 +63,10 @@ function Profile() {
 
   return (
     <div className="flex justify-center items-center h-screen">
+      <ProfileNavBar />
       <Card className="max-w-[400px]">
-        <CardHeader className="flex gap-3">
-          <Image
-            alt="nextui logo"
-            height={40}
-            radius="sm"
-            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-            width={40}
-          />
-          <div className="flex flex-col">
-            <p className="text-big">Profile</p>
-          </div>
-        </CardHeader>
-        <Divider />
+ 
+        
         <CardBody>
           <div>
             <p>

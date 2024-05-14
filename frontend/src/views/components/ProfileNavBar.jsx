@@ -43,14 +43,13 @@ export default function ProfileNavBar() {
         <NavbarBrand className="mr-4 flex items-center">
           <img src={KeyLogo} alt="Key Logo" className="h-6 mr-2" />
           <p className="hidden sm:block font-bold text-inherit">
-            PASSWORD MANAGER
+            Amen.ly
           </p>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-3"></NavbarContent>
       </NavbarContent>
 
       <NavbarContent as="div" className="items-center" justify="end">
-        <Login />
         <Dropdown placement="bottom-end">
           <DropdownTrigger>
             <Avatar
@@ -64,14 +63,14 @@ export default function ProfileNavBar() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            <DropdownItem
+            {/* <DropdownItem
               key="profile"
               className="h-14 gap-2"
               textValue="profile"
             >
               <p className="font-semibold">Signed in as</p>
               <p className="font-semibold"> Ahmed</p>
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               key="Edit_Profile"
               textValue="Edit Profile"

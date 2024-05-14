@@ -300,6 +300,8 @@ class User {
     }
   }
 
+
+  // henaaaaaa
   static async uploadUserPic(userId, fileStream) {
     const s3 = new AWS.S3();
     const params = {
@@ -319,25 +321,28 @@ class User {
   }
   // Add a method in the User class to retrieve the user's profile picture
 
-  static async getUserPic(userId) {
+  static async getUserPicUrl(userId) {
     const s3 = new AWS.S3();
     const params = {
       Bucket: process.env.BUCKET_NAME,
       Key: `profile_pictures/${userId}.jpg`,
+      Expires: 3600, // URL expires in 1 hour
     };
   
     try {
-      const { Body } = await s3.getObject(params).promise();
-  
-      // Convert the array to a buffer
-      const buffer = Buffer.from(Body);
-  
-      return buffer;
+      const url = await s3.getSignedUrlPromise('getObject', params);
+      return url;
     } catch (error) {
-      console.error('Error retrieving profile picture:', error);
+      console.error('Error retrieving profile picture URL:', error);
       throw error;
     }
   }
+
+  
+
+ 
+
+  
   
 }
 
