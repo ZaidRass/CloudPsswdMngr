@@ -306,7 +306,7 @@ class User {
     const s3 = new AWS.S3();
     const params = {
       Bucket: process.env.BUCKET_NAME,
-      Key: `profile_pictures/${userId}.jpg`,
+      Key: `${userId}.jpg`,
       Body: fileStream,
       ContentType: 'image/jpeg'
     };
