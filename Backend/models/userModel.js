@@ -324,8 +324,8 @@ class User {
   static async getUserPicUrl(userId) {
     const s3 = new AWS.S3();
     const params = {
-      Bucket: process.env.BUCKET_NAME,
-      Key: `profile_pictures/${userId}.jpg`,
+      Bucket: process.env.RESIZED_BUCKET_NAME,
+      Key: `${userId}.jpg`,
       Expires: 3600, // URL expires in 1 hour
     };
   

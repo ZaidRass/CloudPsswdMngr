@@ -10,6 +10,7 @@ import {
   Avatar,
 } from "@nextui-org/react";
 import { SearchIcon } from "./searchicon.jsx";
+import { useEffect, useState } from "react";
 
 // Assuming you have a key logo SVG
 import KeyLogo from "../../assets/keyimage.png";
@@ -18,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProfileNavbar() {
   const Navigator = useNavigate();
-
+  const [imageUrl, setImageUrl] = useState("");
   const handleProfile = () => {
     Navigator("/profile");
   };
@@ -37,7 +38,27 @@ export default function ProfileNavbar() {
       console.error("Logout error:", error);
     }
   };
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
 
+        // Call API to fetch profile picture
+        const pictureResponse = await axios.get(
+          `http://localhost:3000/api/v1/users/getProfilePic`,
+          { withCredentials: true }
+        );
+        
+        console.log("here112351",pictureResponse.data.imageUrl)
+        setImageUrl(pictureResponse.data.imageUrl);
+        // refresh window
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        // Handle error, e.g., show an error message
+      }
+    };
+
+    fetchProfile();
+  }, []);
   return (
     <Navbar isBordered className="fixed top-0 left-0 w-full bg-white z-50">
       <NavbarContent justify="start">
@@ -73,7 +94,7 @@ export default function ProfileNavbar() {
               color="secondary"
               name="Jason Hughes"
               size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src={imageUrl}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">

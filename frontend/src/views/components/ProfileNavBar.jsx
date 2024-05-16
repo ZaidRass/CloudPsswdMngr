@@ -14,10 +14,11 @@ import KeyLogo from "../../assets/keyimage.png";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Login from "./LoginModal.jsx";
+import { useEffect, useState } from "react";
 
 export default function ProfileNavBar() {
   const navigate = useNavigate();
-
+  const [imageUrl, setImageUrl] = useState("");
   const handleHome = () => {
     navigate("/home");
   };
@@ -36,6 +37,28 @@ export default function ProfileNavBar() {
       console.error("Logout error:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+
+        // Call API to fetch profile picture
+        const pictureResponse = await axios.get(
+          `http://localhost:3000/api/v1/users/getProfilePic`,
+          { withCredentials: true }
+        );
+        
+        console.log("here112351",pictureResponse.data.imageUrl)
+        setImageUrl(pictureResponse.data.imageUrl);
+        // refresh window
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+        // Handle error, e.g., show an error message
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   return (
     <Navbar isBordered className="fixed top-0 left-0 w-full bg-white z-50">
@@ -59,7 +82,7 @@ export default function ProfileNavBar() {
               color="secondary"
               name="Jason Hughes"
               size="sm"
-              src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
+              src= {imageUrl}
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
