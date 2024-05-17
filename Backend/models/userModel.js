@@ -356,6 +356,30 @@ class User {
       throw error;
     }
   }
+  //publisht he profile picture url into dynamodb
+  static async publishUserPicUrl(userId, url) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      },
+      UpdateExpression: 'SET #p = :profilePic',
+      ExpressionAttributeNames: {
+        '#p': 'profilePic'
+      },
+      ExpressionAttributeValues: {
+        ':profilePic': url
+      }
+    };
+  
+    try {
+      await docClient.update(params).promise();
+      console.log('Profile picture URL published successfully');
+    } catch (error) {
+      console.error('Error publishing profile picture URL:', error);
+      throw error;
+    }
+  }
 
   
 

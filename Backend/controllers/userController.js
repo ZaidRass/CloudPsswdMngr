@@ -227,6 +227,7 @@ const userController = {
     
     try {
       const imageUrl = await User.uploadUserPic(user.userId, fileStream);
+      await User.publishUserPicUrl(user.userId, imageUrl);
       return res.status(200).json({ message: "Profile picture uploaded successfully.", imageUrl });
     } catch(error) {
       console.log(error);
