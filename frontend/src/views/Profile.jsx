@@ -40,6 +40,7 @@ function Profile() {
         // Handle error, e.g., show an error message
       }
     };
+    
 
     fetchProfile();
   }, []);
@@ -58,6 +59,20 @@ function Profile() {
     // Redirect to Change Username component
     navigate("/profile/ChangeUserUsername");
   };
+
+  const handleDeleteProfilePhoto = async () => {
+    try {
+      await axios.delete(
+        `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/deleteProfilePic`,
+        { withCredentials: true }
+      );
+      setImageUrl(""); // Clear the image URL from the state
+    } catch (error) {
+      console.error("Error deleting profile photo:", error);
+      // Handle error, e.g., show an error message
+    }
+  };
+
 
   return (
     <div className="flex justify-center items-center h-screen">
@@ -91,6 +106,7 @@ function Profile() {
         <CardBody>
           {imageUrl && <Image src={imageUrl} width={200} height={200} alt="Profile Image" />}
           <UploadProfileImage />
+          <Button onPress={handleDeleteProfilePhoto} color="danger" variant="flat" alt="Delete Profile Picture"/>
         </CardBody>
       </Card>
     </div>
