@@ -179,6 +179,18 @@ const userController = {
     }
   },
 
+  deleteProfilePicture: async (req, res) => {
+    const user = req.userId;
+
+    try {
+      await User.deleteUserPic(user);
+      return res.status(200).json({ message: "Profile picture deleted successfully." });
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   updatePassword: async (req, res) => {
     try {
       const userId = req.userId;
@@ -215,6 +227,7 @@ const userController = {
     
     try {
       const imageUrl = await User.uploadUserPic(user.userId, fileStream);
+      await User.publishUserPicUrl(user.userId, imageUrl);
       return res.status(200).json({ message: "Profile picture uploaded successfully.", imageUrl });
     } catch(error) {
       console.log(error);

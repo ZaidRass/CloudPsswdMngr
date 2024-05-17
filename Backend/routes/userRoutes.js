@@ -22,6 +22,7 @@ router.put('/decrypt', authenticate, userController.decrypt);
 router.put('/updateCredentials/:passwordId', authenticate, userController.updateCredentials);
 router.delete('/deletePlatformPassword/:passwordId', authenticate, userController.deletePlatformPassword);
 router.delete('/profile', authenticate, userController.removeProfile);
+router.delete('/profile-picture', authenticate, userController.deleteProfilePicture);
 
 // Upload profile picture route
 

@@ -222,6 +222,21 @@ class User {
     }
   }
 
+  static async deleteUserPic(userId) {
+    try {
+      const s3 = new AWS.S3();
+      const params = {
+        Bucket: process.env.RESIZED_BUCKET_NAME,
+        Key: `${userId}.jpg`,
+      };
+      await s3.deleteObject(params).promise();
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Could not delete profile picture');
+    }
+  }
+
   static async updateUsername(userId, username) {
     const params = {
       TableName: TABLE_NAME,
@@ -338,6 +353,30 @@ class User {
       return url;
     } catch (error) {
       console.error('Error retrieving profile picture URL:', error);
+      throw error;
+    }
+  }
+  //publisht he profile picture url into dynamodb
+  static async publishUserPicUrl(userId, url) {
+    const params = {
+      TableName: TABLE_NAME,
+      Key: {
+        userId: userId
+      },
+      UpdateExpression: 'SET #p = :profilePic',
+      ExpressionAttributeNames: {
+        '#p': 'profilePic'
+      },
+      ExpressionAttributeValues: {
+        ':profilePic': url
+      }
+    };
+  
+    try {
+      await docClient.update(params).promise();
+      console.log('Profile picture URL published successfully');
+    } catch (error) {
+      console.error('Error publishing profile picture URL:', error);
       throw error;
     }
   }
