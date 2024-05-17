@@ -22,7 +22,7 @@ function Profile() {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/users/profile",
+          "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/profile",
           { withCredentials: true }
         );
         setUserData(response.data);
@@ -30,11 +30,9 @@ function Profile() {
         // Call API to fetch profile picture
         //.log(response.)
         const pictureResponse = await axios.get(
-          `http://localhost:3000/api/v1/users/getProfilePic`,
+          `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
-        
-        console.log("here112351",pictureResponse.data.imageUrl)
         setImageUrl(pictureResponse.data.imageUrl);
         // refresh window
       } catch (error) {

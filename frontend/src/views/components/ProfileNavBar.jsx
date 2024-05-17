@@ -27,7 +27,7 @@ export default function ProfileNavBar() {
     try {
       console.log("logging out");
       const response = await axios.post(
-        "http://localhost:3000/api/v1/Users/logout",
+        "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/logout",
         {},
         { withCredentials: true }
       );
@@ -44,7 +44,7 @@ export default function ProfileNavBar() {
 
         // Call API to fetch profile picture
         const pictureResponse = await axios.get(
-          `http://localhost:3000/api/v1/users/getProfilePic`,
+          `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
         

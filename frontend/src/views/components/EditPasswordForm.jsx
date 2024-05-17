@@ -16,7 +16,7 @@ export default function EditPasswordForm({ passwordId }) {
     try {
       console.log("editing password");
       const response = await axios.put(
-        `http://localhost:3000/api/v1/Users/updateCredentials/${passwordId}`,
+        `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/updateCredentials/${passwordId}`,
         { platformEmail, platform, password },
         { withCredentials: true }
       );

@@ -299,6 +299,10 @@ class User {
       throw error;
     }
   }
+  // static async deleteUserPic(userId) 
+  // {
+    
+  // }
 
 
   // henaaaaaa

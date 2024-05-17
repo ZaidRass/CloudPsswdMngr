@@ -24,7 +24,7 @@ export default function UploadProfileImage() {
       setIsLoading(true); // Set isLoading to true before making the request
       const formData = new FormData();
       formData.append("file", selectedFile);
-      const response = await axios.post("http://localhost:3000/api/v1/users/uploadProfilePicture", formData, {
+      const response = await axios.post("http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/uploadProfilePicture", formData, {
         withCredentials: true,
         headers: {
           "Content-Type": "multipart/form-data",

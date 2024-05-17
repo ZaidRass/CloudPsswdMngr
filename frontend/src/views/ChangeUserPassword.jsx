@@ -12,8 +12,8 @@ function ChangeUserPassword() {
 
   const handleChangePassword = async () => {
     try {
-      await axios.put('http://localhost:3000/api/v1/users/profile/updatePassword', { password, confirm_password }, { withCredentials: true });
-      await axios.get('http://localhost:3000/api/v1/users/logout', { withCredentials: true });
+      await axios.put('http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/profile/updatePassword', { password, confirm_password }, { withCredentials: true });
+      await axios.get('http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/logout', { withCredentials: true });
       navigate('/');
       //navigate('/profile');
     } catch (error) {
