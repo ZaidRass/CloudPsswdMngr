@@ -1,0 +1,12 @@
+{
+    "type": "module",
+    "scripts": {
+        "back:start": "cd Backend; npm start",
+        "front:start": "cd frontend; npm run dev",
+        "front:build": "cd frontend; npm run build",
+        "start": "concurrently \"npm run back:start\" \"npm run front:start\""
+    },
+    "devDependencies": {
+        "concurrently": "^8.2.2"
+    }
+}
