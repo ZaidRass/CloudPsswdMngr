@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,22 +9,32 @@ import {
 } from "@nextui-org/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
-import ProfileNavBar from "./components/ProfileNavBar.jsx";
+import UploadProfileImage from "./components/UploadImageModal";
+import ProfileNavBar from "./components/ProfileNavBar"
 
 function Profile() {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageUrl, setImageUrl] = useState(""); // State to store image URL
   const navigate = useNavigate(); // Initialize navigate function
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/users/profile",
+          "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/profile",
           { withCredentials: true }
         );
         setUserData(response.data);
         setLoading(false);
+        // Call API to fetch profile picture
+        //.log(response.)
+        const pictureResponse = await axios.get(
+          `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/getProfilePic`,
+          { withCredentials: true }
+        );
+        setImageUrl(pictureResponse.data.imageUrl);
+        // refresh window
       } catch (error) {
         console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message
@@ -53,19 +63,8 @@ function Profile() {
     <div className="flex justify-center items-center h-screen">
       <ProfileNavBar />
       <Card className="max-w-[400px]">
-        <CardHeader className="flex gap-3">
-          <Image
-            alt="nextui logo"
-            height={40}
-            radius="sm"
-            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
-            width={40}
-          />
-          <div className="flex flex-col">
-            <p className="text-big">Profile</p>
-          </div>
-        </CardHeader>
-        <Divider />
+ 
+        
         <CardBody>
           <div>
             <p>
@@ -87,6 +86,11 @@ function Profile() {
             </p>
             <Button onClick={navigateToChangePassword}>Change Password</Button>
           </div>
+        </CardBody>
+        <Divider />
+        <CardBody>
+          {imageUrl && <Image src={imageUrl} width={200} height={200} alt="Profile Image" />}
+          <UploadProfileImage />
         </CardBody>
       </Card>
     </div>

@@ -17,8 +17,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <NextUIProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<LandingPage />} /> {/* Use element prop with JSX element */}
-          <Route path="/home" element={<Home />} /> {/* Use element prop with JSX element */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/profile" element={<Profile />} /> {}
           <Route path = "/profile/ChangeUserEmail" element = {<ChangeUserEmail />} />
           <Route path = "/profile/ChangeUserUsername" element = {<ChangeUserUsername />} />

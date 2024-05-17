@@ -3,6 +3,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { encrypt } = require('./encDecModel.js');
 const uuid = require('uuid').v4;
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const { Readable } = require('stream');
 const docClient = require('../db/connection.js').dynamodb;
 require('dotenv').config();
 
@@ -167,30 +169,7 @@ class User {
     }
   }
 
-  // static async updateUserProfilePicture(userId, profilePicture) {
-  //   const params = {
-  //     TableName: TABLE_NAME,
-  //     Key: {
-  //       userId: userId
-  //     },
-  //     UpdateExpression: 'SET #p = :profilePicture',
-  //     ExpressionAttributeNames: {
-  //       '#p': 'profilePicture'
-  //     },
-  //     ExpressionAttributeValues: {
-  //       ':profilePicture': profilePicture
-  //     }
-  //   };
-
-  //   try {
-  //     await docClient.update(params).promise();
-  //   } catch (err) {
-  //     console.error('Error updating user in DynamoDB', err);
-  //     throw err;
-  //   }
-  // }
-
-  static async updatePlatformEmail(user, passwordId, platEmail) {
+  static async updateCredentials(user, passwordId, platform, platEmail, newPassword) {
     try {
       const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
 
@@ -199,78 +178,9 @@ class User {
         return false;
       }
 
-      user.savedPasswords[passwordIndex].platEmail = platEmail;
-
-      const params = {
-        TableName: TABLE_NAME,
-        Key: {
-          userId: user.userId
-        },
-        UpdateExpression: 'SET #p = :savedPasswords',
-        ExpressionAttributeNames: {
-          '#p': 'savedPasswords'
-        },
-        ExpressionAttributeValues: {
-          ':savedPasswords': user.savedPasswords
-        },
-        ConditionExpression: 'attribute_exists(userId)'
-      };
-
-      await docClient.update(params).promise();
-      console.log('PlatEmail updated successfully');
-      return true;
-    } catch (err) {
-      console.error('Error updating platEmail:', err);
-      return false;
-    }
-  }
-
-  static async updatePassword(user, passwordId, newPassword) {
-    try {
-      const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-      if (passwordIndex === -1) {
-        console.log('Password not found');
-        return false;
-      }
-
-      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
-
-      const params = {
-        TableName: TABLE_NAME,
-        Key: {
-          userId: user.userId
-        },
-        UpdateExpression: 'SET #p = :savedPasswords',
-        ExpressionAttributeNames: {
-          '#p': 'savedPasswords'
-        },
-        ExpressionAttributeValues: {
-          ':savedPasswords': user.savedPasswords
-        },
-        ConditionExpression: 'attribute_exists(userId)'
-      };
-
-      await docClient.update(params).promise();
-      console.log('Password updated successfully');
-      return true;
-    } catch (err) {
-      console.error('Error updating password:', err);
-      return false;
-    }
-  }
-
-  static async updateCredentials(user, passwordId, platEmail, newPassword) {
-    try {
-      const passwordIndex = user.savedPasswords.findIndex((password) => password.passId === passwordId);
-
-      if (passwordIndex === -1) {
-        console.log('Password not found');
-        return false;
-      }
-
-      user.savedPasswords[passwordIndex].platEmail = platEmail;
-      user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString();
+      platform ? user.savedPasswords[passwordIndex].platform = platform : null;
+      platEmail ? user.savedPasswords[passwordIndex].platEmail = platEmail : null;
+      newPassword ? user.savedPasswords[passwordIndex].password = encrypt(newPassword).toString() : null;
 
       const params = {
         TableName: TABLE_NAME,
@@ -389,6 +299,55 @@ class User {
       throw error;
     }
   }
+  // static async deleteUserPic(userId) 
+  // {
+    
+  // }
+
+
+  // henaaaaaa
+  static async uploadUserPic(userId, fileStream) {
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: process.env.BUCKET_NAME,
+      Key: `${userId}.jpg`,
+      Body: fileStream,
+      ContentType: 'image/jpeg'
+    };
+
+    try {
+      await s3.upload(params).promise();
+      console.log('Profile picture uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading profile picture:', error);
+      throw error;
+    }
+  }
+  // Add a method in the User class to retrieve the user's profile picture
+
+  static async getUserPicUrl(userId) {
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: process.env.RESIZED_BUCKET_NAME,
+      Key: `${userId}.jpg`,
+      Expires: 3600, // URL expires in 1 hour
+    };
+  
+    try {
+      const url = await s3.getSignedUrlPromise('getObject', params);
+      return url;
+    } catch (error) {
+      console.error('Error retrieving profile picture URL:', error);
+      throw error;
+    }
+  }
+
+  
+
+ 
+
+  
+  
 }
 
 module.exports = User;
