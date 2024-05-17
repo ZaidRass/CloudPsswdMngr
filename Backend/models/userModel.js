@@ -222,6 +222,21 @@ class User {
     }
   }
 
+  static async deleteUserPic(userId) {
+    try {
+      const s3 = new AWS.S3();
+      const params = {
+        Bucket: process.env.RESIZED_BUCKET_NAME,
+        Key: `${userId}.jpg`,
+      };
+      await s3.deleteObject(params).promise();
+      return true;
+    } catch (error) {
+      console.log(error);
+      throw new Error('Could not delete profile picture');
+    }
+  }
+
   static async updateUsername(userId, username) {
     const params = {
       TableName: TABLE_NAME,
