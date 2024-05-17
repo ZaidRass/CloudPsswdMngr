@@ -12,7 +12,7 @@ function ChangeUserEmail() {
 
   const handleChangeEmail = async () => {
     try {
-      await axios.put('http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/profile/updateEmail', { email }, { withCredentials: true });
+      await axios.put('http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/profile/updateEmail', { email }, { withCredentials: true });
       navigate("/profile");
     } catch (error) {
       console.error('Error changing email:', error);

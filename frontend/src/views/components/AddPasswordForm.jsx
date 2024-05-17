@@ -16,7 +16,7 @@ export default function AddPasswordForm() {
   
     try {
       console.log("adding password")
-      const response = await axios.put('http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/addNewPassword', {platform,platformEmail,password }, { withCredentials: true });
+      const response = await axios.put('http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/addNewPassword', {platform,platformEmail,password }, { withCredentials: true });
       if (response.status === 200) {
         console.log('Password added successfully');
         // Reload the page after successful password addition

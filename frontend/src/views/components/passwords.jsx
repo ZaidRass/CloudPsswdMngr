@@ -43,7 +43,7 @@ export default function Passwords() {
   const handleDelete = async (passwordId) => {
     try {
       const response = await axios.delete(
-        `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/deletePlatformPassword/${passwordId}`,
+        `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/deletePlatformPassword/${passwordId}`,
         { withCredentials: true }
       );
       if (response.status === 200) {
@@ -58,7 +58,7 @@ export default function Passwords() {
   const fetchPasswords = async () => {
     try {
       const response = await axios.get(
-        "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/passwords",
+        "http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/passwords",
         { withCredentials: true }
       );
       if (!response) {

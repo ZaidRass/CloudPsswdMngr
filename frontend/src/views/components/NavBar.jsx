@@ -28,7 +28,7 @@ export default function ProfileNavbar() {
     try {
       console.log("logging out");
       const response = await axios.post(
-        "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/Users/logout",
+        `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/logout`,
         {},
         { withCredentials: true }
       );
@@ -44,7 +44,7 @@ export default function ProfileNavbar() {
 
         // Call API to fetch profile picture
         const pictureResponse = await axios.get(
-          `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/getProfilePic`,
+          `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
         

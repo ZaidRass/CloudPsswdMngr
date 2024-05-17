@@ -22,7 +22,7 @@ function Profile() {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          "http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/profile",
+          "http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/profile",
           { withCredentials: true }
         );
         setUserData(response.data);
@@ -30,7 +30,7 @@ function Profile() {
         // Call API to fetch profile picture
         //.log(response.)
         const pictureResponse = await axios.get(
-          `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/getProfilePic`,
+          `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
         setImageUrl(pictureResponse.data.imageUrl);
