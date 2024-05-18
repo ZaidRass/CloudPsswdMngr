@@ -31,7 +31,7 @@ function ChangeUserEmail() {
             alt="nextui logo"
             height={40}
             radius="sm"
-            src="https://avatars.githubusercontent.com/u/86160567?s=200&v=4"
+            src="https://avatars.githubuhttp://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000sercontent.com/u/86160567?s=200&v=4"
             width={40}
           />
           <div className="flex flex-col">

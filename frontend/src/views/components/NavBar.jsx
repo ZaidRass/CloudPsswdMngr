@@ -28,7 +28,7 @@ export default function ProfileNavbar() {
     try {
       console.log("logging out");
       const response = await axios.post(
-        `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/logout`,
+        `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/logout`,
         {},
         { withCredentials: true }
       );

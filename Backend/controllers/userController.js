@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 const { decrypt } = require("../models/encDecModel");
 require("dotenv").config();
-const { Readable } = require('stream')
+const { Readable } = require("stream");
 
 const userController = {
   register: async (req, res) => {
@@ -107,7 +107,13 @@ const userController = {
       const user = req.rootUser;
       const { passwordId } = req.params;
       const { platformEmail, platform, password } = req.body;
-      await User.updateCredentials(user, passwordId, platform, platformEmail, password);
+      await User.updateCredentials(
+        user,
+        passwordId,
+        platform,
+        platformEmail,
+        password
+      );
       return res
         .status(200)
         .json({ message: "Credentials updated successfully." });
@@ -180,11 +186,28 @@ const userController = {
   },
 
   deleteProfilePicture: async (req, res) => {
-    const user = req.userId;
-
+    const user = req.rootUser;
     try {
-      await User.deleteUserPic(user);
-      return res.status(200).json({ message: "Profile picture deleted successfully." });
+      const previousVersionUrl = await User.deleteCurrentProfilePic(
+        user.userId
+      );
+
+      if (previousVersionUrl) {
+        return res
+          .status(200)
+          .json({
+            message:
+              "Profile picture reverted to previous version successfully.",
+            previousVersionUrl,
+          });
+      } else {
+        return res
+          .status(200)
+          .json({
+            message:
+              "Profile picture deleted successfully. No previous version to revert to.",
+          });
+      }
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
@@ -224,16 +247,19 @@ const userController = {
     const user = req.rootUser;
     console.log(req.file);
     const fileStream = Readable.from(req.file.buffer);
-    
+
     try {
       const imageUrl = await User.uploadUserPic(user.userId, fileStream);
       await User.publishUserPicUrl(user.userId, imageUrl);
-      return res.status(200).json({ message: "Profile picture uploaded successfully.", imageUrl });
-    } catch(error) {
+      return res
+        .status(200)
+        .json({ message: "Profile picture uploaded successfully.", imageUrl });
+    } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
+
   getProfilePic: async (req, res) => {
     const user = req.rootUser;
     try {
@@ -244,17 +270,18 @@ const userController = {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   },
-  deleteProfilePic: async (req, res) => { 
+  deleteProfilePic: async (req, res) => {
     const user = req.rootUser;
     try {
       await User.deleteUserPic(user.userId);
-      return res.status(200).json({ message: "Profile picture deleted successfully." });
+      return res
+        .status(200)
+        .json({ message: "Profile picture deleted successfully." });
     } catch (error) {
       console.log(error);
       return res.status(500).json({ error: "Internal Server Error" });
     }
-  }
-  
+  },
 };
 
 module.exports = userController;

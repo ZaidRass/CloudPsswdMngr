@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Card,
-  CardHeader,
   CardBody,
   Divider,
   Image,
@@ -10,7 +9,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import UploadProfileImage from "./components/UploadImageModal";
-import ProfileNavBar from "./components/ProfileNavBar"
+import ProfileNavBar from "./components/ProfileNavBar";
 
 function Profile() {
   const [userData, setUserData] = useState(null);
@@ -27,20 +26,18 @@ function Profile() {
         );
         setUserData(response.data);
         setLoading(false);
+
         // Call API to fetch profile picture
-        //.log(response.)
         const pictureResponse = await axios.get(
           `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/getProfilePic`,
           { withCredentials: true }
         );
         setImageUrl(pictureResponse.data.imageUrl);
-        // refresh window
       } catch (error) {
         console.error("Error fetching profile:", error);
         // Handle error, e.g., show an error message
       }
     };
-    
 
     fetchProfile();
   }, []);
@@ -62,24 +59,29 @@ function Profile() {
 
   const handleDeleteProfilePhoto = async () => {
     try {
-      await axios.delete(
-        `http://ec2-16-170-228-249.eu-north-1.compute.amazonaws.com:3000/api/v1/users/deleteProfilePic`,
+      const response = await axios.delete(
+        `http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/profile-picture`,
         { withCredentials: true }
       );
-      setImageUrl(""); // Clear the image URL from the state
+      const { previousVersionUrl, message } = response.data;
+  
+      if (previousVersionUrl) {
+        setImageUrl(previousVersionUrl); // Set the previous version URL as the new image URL
+      } else {
+        setImageUrl(""); // Clear the image URL from the state if no previous version exists
+      }
+  
+      console.log(message); // Log the message to see what happened
     } catch (error) {
       console.error("Error deleting profile photo:", error);
-      // Handle error, e.g., show an error message
     }
   };
-
+  
 
   return (
     <div className="flex justify-center items-center h-screen">
       <ProfileNavBar />
       <Card className="max-w-[400px]">
- 
-        
         <CardBody>
           <div>
             <p>
@@ -106,7 +108,9 @@ function Profile() {
         <CardBody>
           {imageUrl && <Image src={imageUrl} width={200} height={200} alt="Profile Image" />}
           <UploadProfileImage />
-          <Button onPress={handleDeleteProfilePhoto} color="danger" variant="flat" alt="Delete Profile Picture"/>
+          <Button onPress={handleDeleteProfilePhoto} color="danger" variant="flat">
+            Delete Profile Picture
+          </Button>
         </CardBody>
       </Card>
     </div>

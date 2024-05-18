@@ -27,7 +27,7 @@ export default function ProfileNavBar() {
     try {
       console.log("logging out");
       const response = await axios.post(
-        "http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/Users/logout",
+        "http://website-load-balancer-903681776.eu-north-1.elb.amazonaws.com/api/v1/users/logout",
         {},
         { withCredentials: true }
       );
@@ -86,14 +86,6 @@ export default function ProfileNavBar() {
             />
           </DropdownTrigger>
           <DropdownMenu aria-label="Profile Actions" variant="flat">
-            {/* <DropdownItem
-              key="profile"
-              className="h-14 gap-2"
-              textValue="profile"
-            >
-              <p className="font-semibold">Signed in as</p>
-              <p className="font-semibold"> Ahmed</p>
-            </DropdownItem> */}
             <DropdownItem
               key="Edit_Profile"
               textValue="Edit Profile"

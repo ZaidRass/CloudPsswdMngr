@@ -24,6 +24,4 @@ router.delete('/deletePlatformPassword/:passwordId', authenticate, userControlle
 router.delete('/profile', authenticate, userController.removeProfile);
 router.delete('/profile-picture', authenticate, userController.deleteProfilePicture);
 
-// Upload profile picture route
-
 module.exports = router;

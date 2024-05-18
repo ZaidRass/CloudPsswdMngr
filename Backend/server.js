@@ -16,11 +16,16 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [process.env.ORIGIN || 'http://localhost:5173'],
+    origin: [process.env.ORIGIN],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   })
 );
+
+// Health check endpoint
+app.get('/healthy', (req, res) => {
+  res.status(200).json({ message: 'Server is healthy' });
+});
 
 app.use('/api/v1', authRouter);
 app.use(authenticationMiddleware);
